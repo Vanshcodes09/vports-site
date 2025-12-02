@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Vprots – Custom Touch-Free Tool</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    :root {
+      --bg: #05060a;
+      --card: #0e1018;
+      --accent: #ff3047;
+      --accent-soft: rgba(255, 48, 71, 0.25);
+      --text-main: #f7f7ff;
+      --text-soft: #a6a8c3;
+      --radius: 18px;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #1b1f3b 0, #05060a 55%);
+      color: var(--text-main);
+      min-height: 100vh;
+    }
+    a { text-decoration: none; color: inherit; }
+
+    header {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 20px 20px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .logo {
+      font-weight: 800;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .logo-mark {
+      width: 26px;
+      height: 26px;
+      border-radius: 999px;
+      background: conic-gradient(from 140deg, #ff3047, #ff9a62, #ff3047);
+      box-shadow: 0 0 18px rgba(255, 48, 71, 0.7);
+    }
+    .chip {
+      padding: 4px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,255,255,0.14);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.18em;
+      color: var(--text-soft);
+    }
+
+    .hero {
+      max-width: 1100px;
+      margin: 10px auto 40px;
+      padding: 30px 20px 60px;
+      display: grid;
+      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+      gap: 40px;
+      align-items: center;
+    }
+    @media (max-width: 800px) {
+      .hero {
+        grid-template-columns: 1fr;
+        padding-bottom: 30px;
+      }
+    }
+    .hero-text h1 {
+      font-size: clamp(34px, 5vw, 52px);
+      line-height: 1.02;
+    }
+    .hero-text h1 span {
+      background: linear-gradient(120deg, #ff3047, #ff9a62);
+      -webkit-background-clip: text;
+      color: transparent;
+    }
+    .hero-sub {
+      margin-top: 14px;
+      color: var(--text-soft);
+      max-width: 430px;
+      font-size: 15px;
+    }
+    .hero-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 14px;
+    }
+    .hero-badges span {
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 12px;
+      color: var(--text-soft);
+    }
+    .hero-cta {
+      margin-top: 22px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 12px;
+      align-items: center;
+    }
+    .btn-primary {
+      background: linear-gradient(135deg, #ff3047, #ff9a62);
+      color: #05060a;
+      padding: 12px 26px;
+      font-weight: 600;
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-size: 15px;
+      box-shadow: 0 14px 28px rgba(255, 48, 71, 0.45);
+      transform: translateY(0);
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 18px 36px rgba(255, 48, 71, 0.6);
+    }
+    .price-pill {
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    .hero-visual {
+      background: radial-gradient(circle at 10% 0, #ff9a62 0, #ff3047 18%, #05060a 52%);
+      border-radius: 32px;
+      padding: 26px 24px 30px;
+      position: relative;
+      box-shadow:
+        0 18px 60px rgba(0,0,0,0.75),
+        0 0 0 1px rgba(255,255,255,0.04);
+      overflow: hidden;
+    }
+    .hero-visual::before {
+      content: "";
+      position: absolute;
+      inset: 18% -40%;
+      background:
+        radial-gradient(circle at 10% 0, rgba(255,255,255,0.2), transparent 60%),
+        linear-gradient(120deg, rgba(255,255,255,0.15), transparent 55%);
+      mix-blend-mode: screen;
+      opacity: 0.9;
+      pointer-events: none;
+    }
+    .device {
+      position: relative;
+      border-radius: 28px;
+      background: linear-gradient(150deg, #10111b, #05060a);
+      padding: 20px;
+      box-shadow: 0 14px 40px rgba(0,0,0,0.85);
+      border: 1px solid rgba(255,255,255,0.16);
+    }
+    .product-mock {
+      height: 210px;
+      border-radius: 24px;
+      background:
+        radial-gradient(circle at 20% 0, rgba(255,255,255,0.2), transparent 55%),
+        radial-gradient(circle at 90% 120%, rgba(255,48,71,0.7), transparent 60%),
+        radial-gradient(circle at 0 120%, rgba(255,154,98,0.5), transparent 55%);
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    .product-mock img {
+      max-width: 80%;
+      max-height: 80%;
+      object-fit: contain;
+      border-radius: 24px;
+    }
+    .size-tag {
+      position: absolute;
+      bottom: 16px;
+      left: 20px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(3, 5, 15, 0.8);
+      border: 1px solid rgba(255,255,255,0.18);
+      font-size: 11px;
+      color: var(--text-soft);
+      backdrop-filter: blur(8px);
+    }
+    .floating-pill {
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(5, 6, 10, 0.8);
+      border: 1px solid rgba(255,255,255,0.2);
+      font-size: 11px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    .floating-pill-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: #39ffb6;
+      box-shadow: 0 0 12px rgba(57,255,182,0.8);
+    }
+
+    section {
+      max-width: 1100px;
+      margin: 0 auto 40px;
+      padding: 0 20px;
+    }
+    .section-title {
+      font-size: 20px;
+      margin-bottom: 16px;
+    }
+    .section-sub {
+      color: var(--text-soft);
+      font-size: 14px;
+      margin-bottom: 20px;
+      max-width: 480px;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+      gap: 18px;
+    }
+    .card {
+      background: radial-gradient(circle at 0 0, rgba(255,255,255,0.06), transparent 55%),
+                  linear-gradient(160deg, #060712, #090b15);
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,0.06);
+      padding: 16px 16px 18px;
+      position: relative;
+      overflow: hidden;
+      cursor: pointer;
+      transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+    }
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 18px 40px rgba(0,0,0,0.7);
+      border-color: rgba(255,48,71,0.8);
+    }
+    .pill-label {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-soft);
+      margin-bottom: 8px;
+    }
+    .card-title {
+      font-size: 15px;
+      margin-bottom: 6px;
+    }
+    .card-desc {
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+    .swatch-row {
+      display: flex;
+      gap: 8px;
+      margin-top: 10px;
+    }
+    .swatch {
+      width: 18px;
+      height: 18px;
+      border-radius: 999px;
+      border: 2px solid #05060a;
+      box-shadow: 0 0 0 1px rgba(255,255,255,0.6);
+    }
+
+    .selector-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin: 8px 0 4px;
+    }
+    .tag-btn {
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,0.02);
+      border: 1px solid rgba(255,255,255,0.08);
+      font-size: 13px;
+      color: var(--text-soft);
+      cursor: pointer;
+      transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+    }
+    .tag-btn.active {
+      background: var(--accent-soft);
+      border-color: var(--accent);
+      color: var(--text-main);
+    }
+
+    .summary {
+      margin-top: 10px;
+      font-size: 13px;
+      color: var(--text-soft);
+    }
+
+    .features-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 18px;
+    }
+    .feature-item {
+      background: linear-gradient(155deg, #060712, #090b16);
+      border-radius: var(--radius);
+      border: 1px solid rgba(255,255,255,0.05);
+      padding: 14px 15px 16px;
+      font-size: 14px;
+      color: var(--text-soft);
+    }
+    .feature-item strong { color: var(--text-main); }
+
+    .footnote {
+      font-size: 11px;
+      color: var(--text-soft);
+      text-align: center;
+      margin: 30px 0 28px;
+    }
+
+    /* gallery section */
+    .mini-gallery {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .mini-gallery img {
+      width: 160px;
+      height: 120px;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 1px solid rgba(255,255,255,0.18);
+    }
+
+    .fade-up {
+      opacity: 0;
+      transform: translateY(18px);
+      animation: fadeUp 0.7s ease forwards;
+    }
+    .delay-1 { animation-delay: 0.12s; }
+    .delay-2 { animation-delay: 0.22s; }
+    .delay-3 { animation-delay: 0.32s; }
+
+    @keyframes fadeUp {
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <div class="logo-mark"></div>
+      <span>VPROTS</span>
+    </div>
+    <div class="chip">3D printed · PLA · Made in India</div>
+  </header>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="hero-text fade-up">
+        <h1>Customize your <span>Vprots</span><br />touch-free helper.</h1>
+        <p class="hero-sub">
+          A compact 3D-printed tool for doors, buttons and handles - now in your
+          favourite size, theme and colour.
+        </p>
+        <div class="hero-badges">
+          <span>Starts at ₹89</span>
+          <span>PLA · Lightweight</span>
+          <span>Made to order</span>
+        </div>
+        <div class="hero-cta">
+          <a href="#custom" class="btn-primary">Customize &amp; Buy – ₹89</a>
+          <span class="price-pill">Delivered in 3–5 days · Secure Razorpay checkout</span>
+        </div>
+      </div>
+
+      <div class="hero-visual fade-up delay-1">
+        <div class="device">
+          <div class="product-mock">
+            <!-- MAIN HERO IMAGE -->
+            <img src="img/main-top.jpg" alt="Vprots product">
+            <div class="size-tag">Medium · Classic Red</div>
+            <div class="floating-pill">
+              <span class="floating-pill-dot"></span>
+              <span>Hygienic touch-free reach</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SMALL IMAGE GALLERY -->
+    <section class="fade-up delay-1">
+      <h2 class="section-title">See Vprots from every angle</h2>
+      <div class="mini-gallery">
+        <img src="img/main-top.jpg"  alt="Main view">
+        <img src="img/angle-1.jpg"   alt="Angle view">
+        <img src="img/blueprint.jpg" alt="Blueprint">
+        <img src="img/sketch.jpg"    alt="Sketch">
+      </div>
+    </section>
+
+    <!-- CUSTOMIZER -->
+    <section id="custom" class="fade-up delay-1">
+      <h2 class="section-title">Pick your style</h2>
+      <p class="section-sub">
+        Choose a size, theme and colour that fits your hands and your vibe. Vprots is 3D-printed after you order, just for you.
+      </p>
+
+      <div class="options-grid">
+        <!-- Size card -->
+        <div class="card" id="size-card">
+          <div class="pill-label">Step 1 · Size</div>
+          <div class="card-title">Perfect fit for every hand</div>
+          <p class="card-desc">Compact for keychains or a little larger for serious daily use.</p>
+          <div class="selector-row">
+            <button class="tag-btn active" data-size="Small">Small</button>
+            <button class="tag-btn" data-size="Medium">Medium</button>
+            <button class="tag-btn" data-size="Large">Large</button>
+          </div>
+        </div>
+
+        <!-- Theme card -->
+        <div class="card" id="theme-card">
+          <div class="pill-label">Step 2 · Theme</div>
+          <div class="card-title">Match your world</div>
+          <p class="card-desc">From minimal and clean to bold gamer energy.</p>
+          <div class="selector-row">
+            <button class="tag-btn active" data-theme="Minimal">Minimal</button>
+            <button class="tag-btn" data-theme="Neon">Neon</button>
+            <button class="tag-btn" data-theme="Gamer">Gamer</button>
+            <button class="tag-btn" data-theme="Pastel">Pastel</button>
+          </div>
+        </div>
+
+        <!-- Colour card -->
+        <div class="card" id="color-card">
+          <div class="pill-label">Step 3 · Colour</div>
+          <div class="card-title">Stand out or stay subtle</div>
+          <p class="card-desc">High-contrast colours printed in durable PLA.</p>
+          <div class="swatch-row">
+            <div class="swatch" data-color="Classic Red" style="background:#ff3047;"></div>
+            <div class="swatch" data-color="Stealth Black" style="background:#111217;"></div>
+            <div class="swatch" data-color="Neon Green" style="background:#39ffb6;"></div>
+            <div class="swatch" data-color="Ice Blue" style="background:#45c4ff;"></div>
+          </div>
+          <p class="summary" id="color-label">Selected: Classic Red</p>
+        </div>
+
+        <!-- Summary & BIG payment area -->
+        <div class="card" id="summary-card">
+          <div class="pill-label">Step 4 · Checkout</div>
+          <div class="card-title">Your Vprots configuration</div>
+          <p class="summary" id="summary-text">
+            Small · Minimal · Classic Red · ₹89
+          </p>
+          <p class="card-desc" style="margin-top:8px;">
+            Tap the button below to pay securely with Razorpay. We start 3D printing your Vprots as soon as the order is placed.
+          </p>
+
+          <div style="margin-top:14px; padding:12px; border-radius:16px; background:rgba(5,6,10,0.9); border:1px solid rgba(255,255,255,0.12);">
+            <!-- Replace this link with your real Razorpay payment link or button code -->
+            <a href="YOUR_RAZORPAY_PAYMENT_LINK_HERE"
+               target="_blank"
+               class="btn-primary"
+               style="width:100%; text-align:center; display:inline-block;">
+              Buy Now – Pay Securely with Razorpay
+            </a>
+            <p class="summary" style="margin-top:8px;">
+              UPI · Cards · Netbanking supported. Payment handled by Razorpay.
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section class="fade-up delay-2">
+      <h2 class="section-title">Why people like Vprots</h2>
+      <div class="features-list">
+        <div class="feature-item">
+          <strong>Touch-free comfort</strong><br />
+          Avoid direct contact with elevator buttons, door handles and public switches.
+        </div>
+        <div class="feature-item">
+          <strong>3D-printed PLA</strong><br />
+          Lightweight, smooth finish and easy to clip onto your keys or bag.
+        </div>
+        <div class="feature-item">
+          <strong>Custom for you</strong><br />
+          Sizes, themes and colours tuned to your style – not a generic one-size tool.
+        </div>
+        <div class="feature-item">
+          <strong>Made in small batches</strong><br />
+          Printed on-demand to reduce waste and keep every piece feeling special.
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="fade-up delay-3">
+      <h2 class="section-title">Contact the maker</h2>
+      <p class="section-sub">
+        Have questions, bulk orders or custom ideas for Vprots? Reach out directly.
+      </p>
+      <div style="background:linear-gradient(155deg,#060712,#090b16);border-radius:18px;border:1px solid rgba(255,255,255,0.08);padding:16px 18px;font-size:14px;color:var(--text-soft);max-width:480px;">
+        <p><strong>Name:</strong> Vansh</p>
+        <p><strong>Phone:</strong> <a href="tel:8219947471" style="color:#ff9a62;">8219947471</a></p>
+        <p><strong>Email:</strong> <a href="mailto:vanshhpnhn06@gmail.com" style="color:#ff9a62;">vanshhpnhn06@gmail.com</a></p>
+      </div>
+    </section>
+
+    <p class="footnote">
+      Vprots is crafted with care using PLA. Actual colours may vary slightly from screen to print.
+    </p>
+  </main>
+
+  <script>
+    // simple JS to update configuration summary
+    const sizeButtons = document.querySelectorAll('#size-card .tag-btn');
+    const themeButtons = document.querySelectorAll('#theme-card .tag-btn');
+    const swatches = document.querySelectorAll('#color-card .swatch');
+    const colorLabel = document.getElementById('color-label');
+    const summaryText = document.getElementById('summary-text');
+
+    let currentSize = 'Small';
+    let currentTheme = 'Minimal';
+    let currentColor = 'Classic Red';
+
+    sizeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        sizeButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentSize = btn.dataset.size;
+        updateSummary();
+      });
+    });
+
+    themeButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        themeButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        currentTheme = btn.dataset.theme;
+        updateSummary();
+      });
+    });
+
+    swatches.forEach(sw => {
+      sw.addEventListener('click', () => {
+        currentColor = sw.dataset.color;
+        colorLabel.textContent = 'Selected: ' + currentColor;
+        updateSummary();
+      });
+    });
+
+
+    function updateSummary() {
+      summaryText.textContent = `${currentSize} · ${currentTheme} · ${currentColor} · ₹89`;
+    }
+  </script>
+</body>
+</html>
